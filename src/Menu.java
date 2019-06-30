@@ -59,6 +59,7 @@ public class Menu extends JPanel {
         public void mouseClicked(MouseEvent e) {
             JLabel label = (JLabel) e.getSource();
             if (label == lPlay) {
+                Menu.this.container.showPLayGame();
 
             }
 
