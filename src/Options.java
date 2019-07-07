@@ -197,12 +197,12 @@ public class Options extends JPanel {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        g.drawImage(imgBackGround, 0, 0, 905, 610, null);
+        g.drawImage(imgBackGround, 0, 0, 905, 675, null);
 
         drawPlayer(g,100,  2, 2 , 2 );
         drawPlayer(g,250,  2, 2 , 2 );
         drawPlayer(g,400,  2, 2 , 2 );
-        g.fillRect(590, 0,10,610);
+        g.fillRect(590, 0,10,675);
         if(enter1) drawF(g,0);
         if(enter2) drawF(g,1);
         if(enter3) drawF(g,2);

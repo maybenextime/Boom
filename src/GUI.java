@@ -3,7 +3,7 @@ import java.awt.*;
 
 public class GUI extends JFrame {
     public static final int WIDTHF = 905;
-    public static final int HEIGHTF = 610;
+    public static final int HEIGHTF = 800;
     public Container container;
 
     public GUI() {
@@ -12,7 +12,7 @@ public class GUI extends JFrame {
         this.setResizable(false);
         this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         this.setLocationRelativeTo(null);
-        container= new Container();
+        container = new Container();
         this.add(container);
         this.setVisible(true);
     }

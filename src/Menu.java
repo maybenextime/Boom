@@ -9,10 +9,10 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 
 public class Menu extends JPanel {
-    JLabel lPlay= new JLabel();
-    JLabel lOptions= new JLabel();
-    JLabel lHighScore= new JLabel();
-    JLabel lExit= new JLabel();
+    JLabel lPlay = new JLabel();
+    JLabel lOptions = new JLabel();
+    JLabel lHighScore = new JLabel();
+    JLabel lExit = new JLabel();
     Container container;
 
     public Menu(Container container) {
@@ -89,7 +89,7 @@ public class Menu extends JPanel {
         @Override
         public void mouseEntered(MouseEvent e) {
 
-            JLabel label = (JLabel) e.getSource() ;
+            JLabel label = (JLabel) e.getSource();
             if (label == lPlay) {
                 ImageIcon imgPlay2 = new ImageIcon(getClass().getResource("/Images/play2.png"));
                 lPlay.setIcon(imgPlay2);
@@ -139,7 +139,7 @@ public class Menu extends JPanel {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        g.drawImage(imgBackGround, 0, 0, 905, 610, null);
+        g.drawImage(imgBackGround, 0, 0, 905, 675, null);
     }
 
 

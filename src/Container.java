@@ -22,36 +22,41 @@ public class Container extends JPanel {
         this.add(highScore, "highScore");
         playGame = new PlayGame(Container.this);
         this.add(playGame, "playGame");
+
         showMenu();
     }
 
-    ;
 
     public void showMenu() {
+        if (isSound) audio.getAudio("/Sounds/click.wav").play();
+        menu.requestFocus();
         card.show(Container.this, "menu");
         if (isMusic) audio.getAudio("/Sounds/menu.wav").loop();
         else audio.getAudio("/Sounds/menu.wav").stop();
-        if (isSound) audio.getAudio("/Sounds/click.wav").play();
 
 
     }
 
     public void showOptions() {
-        card.show(Container.this, "options");
         if (isSound) audio.getAudio("/Sounds/click.wav").play();
+
+        card.show(Container.this, "options");
+        options.requestFocus();
 
 
     }
 
     public void showHighScore() {
-        card.show(Container.this, "highScore");
         if (isSound) audio.getAudio("/Sounds/click.wav").play();
+        card.show(Container.this, "highScore");
+        highScore.requestFocus();
 
     }
 
     public void showPLayGame() {
-        card.show(Container.this, "playGame");
         if (isSound) audio.getAudio("/Sounds/click.wav").play();
+        card.show(Container.this, "playGame");
+        playGame.requestFocus();
 
     }
 }
