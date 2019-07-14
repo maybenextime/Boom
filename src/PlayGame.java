@@ -50,14 +50,8 @@ public class PlayGame extends JPanel implements Runnable {
         super.paintComponent(g);
         Graphics2D g2d = (Graphics2D) g;
         Image infoBg = new ImageIcon(getClass().getResource("/Images/inGameInfo.png")).getImage();
-
         g.drawImage(infoBg, 675, 0, 235, 675, null);
         manager.draw(g2d);
-        for (int i = 0; i < 15; i++) {
-            for (int j = 0; j < 15; j++) {
-                g.drawRect(i * 45, j * 45, 45, 45);
-            }
-        }
 
     }
 
@@ -100,6 +94,10 @@ public class PlayGame extends JPanel implements Runnable {
                 if (System.currentTimeMillis() - manager.listBoomFire.get(i).timeStart > manager.listBoomFire.get(i).time)
                     manager.removeBoomFire(manager.listBoomFire.get(i));
             }
+            manager.moveBot(count);
+            manager.playerAlive();
+            manager.bommFireVsBot();
+            manager.boomFireVsPlayer();
             repaint();
             count++;
             if (count == 1000000) {

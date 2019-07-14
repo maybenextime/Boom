@@ -1,5 +1,6 @@
 import javax.swing.*;
 import java.awt.*;
+import java.util.ArrayList;
 
 public class Player {
     public Direction direction = Direction.DOWN;
@@ -12,7 +13,7 @@ public class Player {
     int[][] mapBox = new int[15][15];
     int[][] mapBoom = new int[15][15];
 
-
+    public boolean isAlive=true;
     public int imgIndex = 0;
 
 
@@ -52,6 +53,11 @@ public class Player {
             new ImageIcon(getClass().getResource("/Images/player_down_4.png")).getImage(),
             new ImageIcon(getClass().getResource("/Images/player_down_5.png")).getImage()
     };
+    Image[] imgDead={
+            new ImageIcon(getClass().getResource("/Images/player_dead.png")).getImage(),
+
+    };
+
 
     public void changeDirection(Direction d) {
         this.direction = d;
@@ -61,6 +67,7 @@ public class Player {
     }
 
     public void move(int c) {
+        if(isAlive){
         if (c % 2 != 0) {
             return;
         }
@@ -191,13 +198,14 @@ public class Player {
 
     }
 
+    }
+
     public boolean walkThrough() {
         int newx = (int) Math.round((double) x / 45) * 45;
         int newy = (int) Math.round((double) y / 45) * 45;
 
-        Rectangle player = new Rectangle(x, y, 45, 45);
         Rectangle obj = new Rectangle(newx, newy, 45, 45);
-        Rectangle inters = player.intersection(obj);
+        Rectangle inters = getRect().intersection(obj);
         if (mapBoom[newy / 45][newx / 45] == 1 && inters.getWidth() > 0 && inters.getHeight() > 0) {
 
             return true;
@@ -205,6 +213,12 @@ public class Player {
         return false;
     }
 
+    public Boolean checkcheckImpactVsBot(ArrayList<Bot2> listBot){
+        for(int i=0;i<listBot.size();i++){
+             return(getRect().intersects(listBot.get(i).getRect()));
+        }
+        return false;
+    }
 
     public int checkImpactWithObjs(int x, int y, int[][] map) {
         switch (direction) {
@@ -213,15 +227,14 @@ public class Player {
                 int j = y / 45;
                 Rectangle boxUp = new Rectangle(i * 45, j * 45, 45, 45);
                 Rectangle boxDown = new Rectangle(i * 45, (j + 1) * 45, 45, 45);
-                Rectangle boxPlayer = new Rectangle(x, y, 45, 45);
                 Rectangle inters = new Rectangle();
                 if (map[j][i] != 0 && map[j + 1][i] != 0) return 30;
                 if (map[j][i] != 0) {
-                    inters = boxPlayer.intersection(boxUp);
+                    inters = getRect().intersection(boxUp);
                     return (int) inters.getHeight();
 
                 } else if (map[j + 1][i] != 0) {
-                    inters = boxPlayer.intersection(boxDown);
+                    inters = getRect().intersection(boxDown);
                     return (int) -inters.getHeight();
 
                 }
@@ -232,14 +245,13 @@ public class Player {
                 int j = y / 45;
                 Rectangle boxUp = new Rectangle(i * 45, j * 45, 45, 45);
                 Rectangle boxDown = new Rectangle(i * 45, (j + 1) * 45, 45, 45);
-                Rectangle boxPlayer = new Rectangle(x, y, 45, 45);
                 Rectangle inters = new Rectangle();
                 if (map[j][i] != 0 && map[j + 1][i] != 0) return 30;
                 if (map[j][i] != 0) {
-                    inters = boxPlayer.intersection(boxUp);
+                    inters = getRect().intersection(boxUp);
                     return (int) inters.getHeight();
                 } else if (map[j + 1][i] != 0) {
-                    inters = boxPlayer.intersection(boxDown);
+                    inters = getRect().intersection(boxDown);
                     return (int) -inters.getHeight();
                 }
                 break;
@@ -249,15 +261,14 @@ public class Player {
                 int j = y / 45 + 1;
                 Rectangle boxLeft = new Rectangle(i * 45, j * 45, 45, 45);
                 Rectangle boxRight = new Rectangle((i + 1) * 45, j * 45, 45, 45);
-                Rectangle boxPlayer = new Rectangle(x, y, 45, 45);
                 Rectangle inters = new Rectangle();
                 if (map[j][i] != 0 && map[j][i + 1] != 0) return 30;
                 if (map[j][i] != 0) {
-                    inters = boxPlayer.intersection(boxLeft);
+                    inters = getRect().intersection(boxLeft);
                     return (int) inters.getWidth();
 
                 } else if ((map[j][i + 1] != 0)) {
-                    inters = boxPlayer.intersection(boxRight);
+                    inters = getRect().intersection(boxRight);
                     return (int) -inters.getWidth();
                 }
                 break;
@@ -267,17 +278,16 @@ public class Player {
                 int j = y / 45;
                 Rectangle boxLeft = new Rectangle(i * 45, j * 45, 45, 45);
                 Rectangle boxRight = new Rectangle((i + 1) * 45, j * 45, 45, 45);
-                Rectangle boxPlayer = new Rectangle(x, y, 45, 45);
                 Rectangle inters = new Rectangle();
-                if (map[j][i] != 0) inters = boxPlayer.intersection(boxLeft);
-                else if ((map[j][i + 1] != 0)) inters = boxPlayer.intersection(boxRight);
+                if (map[j][i] != 0) inters = getRect().intersection(boxLeft);
+                else if ((map[j][i + 1] != 0)) inters = getRect().intersection(boxRight);
                 if (map[j][i] != 0 && map[j][i + 1] != 0) return 30;
                 if (map[j][i] != 0) {
-                    inters = boxPlayer.intersection(boxLeft);
+                    inters = getRect().intersection(boxLeft);
                     return (int) inters.getWidth();
 
                 } else if ((map[j][i + 1] != 0)) {
-                    inters = boxPlayer.intersection(boxRight);
+                    inters = getRect().intersection(boxRight);
                     return (int) -inters.getWidth();
                 }
                 break;
@@ -289,56 +299,63 @@ public class Player {
 
 
     public void draw(Graphics2D g2d) {
-        switch (direction) {
-            case LEFT: {
-                if (!isMoving) {
-                    g2d.drawImage(playerLeft[0], x, y, 45, 45, null);
+        if(isAlive){
+            switch (direction) {
+                case LEFT: {
+                    if (!isMoving) {
+                        g2d.drawImage(playerLeft[0], x, y, 45, 45, null);
 
 
-                } else {
-                    imgIndex++;
-                    g2d.drawImage(playerLeft[imgIndex / 50 % playerLeft.length], x, y, 45, 45, null);
+                    } else {
+                        imgIndex++;
+                        g2d.drawImage(playerLeft[imgIndex / 50 % playerLeft.length], x, y, 45, 45, null);
+                    }
+                    break;
                 }
-                break;
-            }
-            case RIGHT: {
-                if (!isMoving) {
-                    g2d.drawImage(playerRight[0], x, y, 45, 45, null);
-                    imgIndex = 1;
+                case RIGHT: {
+                    if (!isMoving) {
+                        g2d.drawImage(playerRight[0], x, y, 45, 45, null);
+                        imgIndex = 1;
 
-                } else {
-                    imgIndex++;
-                    g2d.drawImage(playerRight[imgIndex / 50 % playerLeft.length], x, y, 45, 45, null);
+                    } else {
+                        imgIndex++;
+                        g2d.drawImage(playerRight[imgIndex / 50 % playerLeft.length], x, y, 45, 45, null);
+                    }
+                    break;
                 }
-                break;
-            }
-            case UP: {
-                if (!isMoving) {
-                    g2d.drawImage(playerUp[0], x, y, 45, 45, null);
-                    imgIndex = 1;
+                case UP: {
+                    if (!isMoving) {
+                        g2d.drawImage(playerUp[0], x, y, 45, 45, null);
+                        imgIndex = 1;
 
-                } else {
-                    imgIndex++;
-                    g2d.drawImage(playerUp[imgIndex / 50 % playerLeft.length], x, y, 45, 45, null);
+                    } else {
+                        imgIndex++;
+                        g2d.drawImage(playerUp[imgIndex / 50 % playerLeft.length], x, y, 45, 45, null);
+                    }
+                    break;
                 }
-                break;
-            }
 
-            case DOWN: {
-                if (!isMoving) {
-                    g2d.drawImage(playerDown[0], x, y, 45, 45, null);
-                    imgIndex = 1;
+                case DOWN: {
+                    if (!isMoving) {
+                        g2d.drawImage(playerDown[0], x, y, 45, 45, null);
+                        imgIndex = 1;
 
 
-                } else {
-                    imgIndex++;
-                    g2d.drawImage(playerDown[imgIndex / 50 % playerLeft.length], x, y, 45, 45, null);
+                    } else {
+                        imgIndex++;
+                        g2d.drawImage(playerDown[imgIndex / 50 % playerLeft.length], x, y, 45, 45, null);
+                    }
+                    break;
                 }
-                break;
             }
-        }
-        imgIndex++;
-        isMoving = false;
+            imgIndex++;
+            isMoving = false;
+        } else g2d.drawImage(imgDead[0],x,y,45,45,null);
+
+    }
+
+    public Rectangle getRect(){
+        return new Rectangle(x,y,45,45);
     }
 
 

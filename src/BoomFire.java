@@ -44,7 +44,8 @@ public class BoomFire {
         this.y = y;
         this.timeStart = timeStart;
         this.lenght = lenght;
-        setAllList();
+        setAllDirectList();
+        setListRect();
     }
 
     public void setListUpRec() {
@@ -68,11 +69,15 @@ public class BoomFire {
             listLeftRec.add(new Rectangle(x - 45 * i, y, 45, 45));
     }
 
-    public void setAllList() {
+    public void setAllDirectList() {
         setListUpRec();
         setListDownRec();
         setListRightRec();
         setListLeftRec();
+    }
+
+    public void setListRect() {
+        listRec.clear();
         listRec.addAll(listDownRec);
         listRec.addAll(listUpRec);
         listRec.addAll(listRightRec);
@@ -128,29 +133,82 @@ public class BoomFire {
         }
     }
 
-    public void DirectimpactBoomVsBBox(ArrayList<Rectangle> listBBox, ArrayList<Rectangle> directR) {
+    public void DirectImpactBoomVsBBox(ArrayList<Rectangle> listBBox, ArrayList<Rectangle> directR) {
         for (int i = 0; i < directR.size(); i++) {
             for (int j = 0; j < listBBox.size(); j++) {
+               //
                 Rectangle inter = directR.get(i).intersection(listBBox.get(j));
                 if (inter.getWidth() == 45 && inter.getHeight() == 45) {
-                    for (int k = 0; k < lenght - i - 1; k++) {
+                    for (int k = i+1 ; k < lenght; k++) {
+                        if(i+1==directR.size()) return;
                         directR.remove(i + 1);
+
                     }
+                    setListRect();
                     listRemove.add(listBBox.get(j));
-                    listBBox.remove(j);
+
+                }
+            }
+        }
+
+    }
+
+    public void DirectImpactBoomVsUBox(ArrayList<Rectangle> listUBox, ArrayList<Rectangle> directR) {
+        for (int i = 0; i < directR.size(); i++) {
+            for (int j = 0; j < listUBox.size(); j++) {
+                if(i==directR.size()) return;
+                Rectangle inter = directR.get(i).intersection(listUBox.get(j));
+                if (inter.getWidth() == 45 && inter.getHeight() == 45) {
+                    for (int k = i; k < lenght; k++) {
+                        directR.remove(i);
+                    }
+                    setListRect();
+
                 }
             }
         }
     }
 
     public void impactBoomFireVsBBox(ArrayList<Rectangle> listBBox) {
-        DirectimpactBoomVsBBox(listBBox, listUpRec);
-        DirectimpactBoomVsBBox(listBBox, listDownRec);
-        DirectimpactBoomVsBBox(listBBox, listLeftRec);
-        DirectimpactBoomVsBBox(listBBox, listRightRec);
+        DirectImpactBoomVsBBox(listBBox, listUpRec);
+        DirectImpactBoomVsBBox(listBBox, listDownRec);
+        DirectImpactBoomVsBBox(listBBox, listLeftRec);
+        DirectImpactBoomVsBBox(listBBox, listRightRec);
+    }
 
+
+    public void impactBoomFireVsUBox(ArrayList<Rectangle> listBBox) {
+        DirectImpactBoomVsUBox(listBBox, listUpRec);
+        DirectImpactBoomVsUBox(listBBox, listDownRec);
+        DirectImpactBoomVsUBox(listBBox, listLeftRec);
+        DirectImpactBoomVsUBox(listBBox, listRightRec);
+    }
+
+    public Boolean checkVsPlayer(Player player) {
+        for (int i = 0; i < listRec.size(); i++) {
+            Rectangle inter = player.getRect().intersection(listRec.get(i));
+            int min;
+            if (inter.width < inter.height) min = inter.width;
+            else min = inter.height;
+            if (min > 20) return true;
+        }
+        return false;
+    }
+
+
+
+    public void checkVsBot(ArrayList<Bot2> listbot) {
+        for (int i = 0; i < listbot.size(); i++) {
+            for (int j = 0; j < listRec.size(); j++) {
+                if (listbot.get(i).getRect().intersects(listRec.get(j))) {
+                    listbot.remove(i);
+                    break;
+                }
+            }
+        }
     }
 }
+
 
 
 

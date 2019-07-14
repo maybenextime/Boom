@@ -8,13 +8,24 @@ public class Map {
     int[][] mapObjs = new int[15][15];
     ArrayList<Integer> listImgName = new ArrayList<>();
     Image[] imgList;
-    ArrayList<Integer> listUnBreak;
-    ArrayList<Integer> listBreak;
+    Cell[][] listCell = new Cell[15][15];
 
     public Map(String map) {
         readMap(map);
         getListImgName();
         getListImg();
+        setCellMap();
+    }
+
+    private void setCellMap() {
+        for (int i = 0; i < 15; i++) {
+            for (int j = 0; j < 15; j++) {
+                if (i > 0) listCell[i][j].up = listCell[i - 1][j];
+                if (i < 14) listCell[i][j].down = listCell[i + 1][j];
+                if (j > 0) listCell[i][j].left = listCell[i][j - 1];
+                if (j < 14) listCell[i][j].right = listCell[i][j + 1];
+            }
+        }
     }
 
     private void readMap(String map) {
@@ -26,6 +37,7 @@ public class Map {
                 String str[] = line.split(" ");
                 for (int j = 0; j < 15; j++) {
                     mapObjs[i][j] = Integer.parseInt(str[j]);
+                    listCell[i][j] = new Cell(j * 45, i * 45, Integer.parseInt(str[j]));
                 }
             }
         } catch (IOException e) {
