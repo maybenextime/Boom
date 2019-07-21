@@ -2,25 +2,24 @@ import javax.swing.*;
 import java.awt.*;
 
 public class Boom {
-    int timeExplosion = 3000;
-    public int lenght = 2;
+    private static int size = 45;
+    private int timeExplosion = 3000;
+    private int lenght;
+    long timeStart;
 
-    public long timeStart;
     public int x;
     public int y;
+    private int imgIndex = 0;
 
 
-    public int imgIndex = 0;
-
-
-    public Boom(int x, int y, int lenght, long timeStart) {
+    Boom(int x, int y, int lenght, long timeStart) {
         this.x = x;
         this.y = y;
         this.timeStart = timeStart;
         this.lenght = lenght;
     }
 
-    Image[] imgBoom = {
+    private Image[] imgBoom = {
             new ImageIcon(getClass().getResource("/Images/boom1.png")).getImage(),
             new ImageIcon(getClass().getResource("/Images/boom2.png")).getImage(),
             new ImageIcon(getClass().getResource("/Images/boom3.png")).getImage(),
@@ -31,21 +30,30 @@ public class Boom {
             new ImageIcon(getClass().getResource("/Images/boom8.png")).getImage(),
     };
 
-
-    public boolean isExist(int newx, int newy) {
-        Rectangle rec1 = new Rectangle(x, y, 45, 45);
-        Rectangle rec2 = new Rectangle(newx, newy, 45, 45);
+    boolean isExist(int newx, int newy) {
+        Rectangle rec1 = new Rectangle(x, y, size, size);
+        Rectangle rec2 = new Rectangle(newx, newy, size, size);
         return rec1.intersects(rec2);
     }
 
-    public void draw(Graphics2D g2d) {
+    void draw(Graphics2D g2d) {
         imgIndex++;
-        g2d.drawImage(imgBoom[imgIndex / 15 % imgBoom.length], x, y, 45, 45, null);
+        g2d.drawImage(imgBoom[imgIndex / 12 % imgBoom.length], x, y, size, size, null);
 
     }
-    public void setTimeExplosion(int t){
-        this.timeExplosion=t;
+
+    int getTimeExplosion() {
+        return timeExplosion;
     }
+
+    void setTimeExplosion(int t) {
+        this.timeExplosion = t;
+    }
+
+    int getLenght() {
+        return lenght;
+    }
+
 
 }
 

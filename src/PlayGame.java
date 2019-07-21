@@ -3,18 +3,28 @@ import java.awt.*;
 
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.util.BitSet;
 
 
 public class PlayGame extends JPanel implements Runnable {
-    public static boolean IS_RUNNING = true;
+    private static boolean IS_RUNNING = true;
     private BitSet key = new BitSet();
-    Container container;
-    Manager manager = new Manager();
-    int c = 0;
-    int count = 0;
+    private JLabel back;
+    private Container container;
+    Manager manager;
+    private int count = 0;
 
-    public PlayGame(Container container) {
+    PlayGame(){
+        setBackground(Color.WHITE);
+        setLayout(null);
+        setFocusable(true);
+    }
+
+    PlayGame(Container container) {
+        initComp();
+        manager = new Manager(container.options.player);
         this.container = container;
         setBackground(Color.WHITE);
         setLayout(null);
@@ -24,6 +34,53 @@ public class PlayGame extends JPanel implements Runnable {
         thread.start();
 
     }
+
+    private void initComp() {
+        back = new JLabel();
+        ImageIcon imgBack1 = new ImageIcon(getClass().getResource("/Images/back1.png"));
+        back.setIcon(imgBack1);
+        back.setBounds(800, 500, 75, 75);
+        back.addMouseListener(mouse);
+        this.add(back);
+    }
+
+    private MouseListener mouse = new MouseListener() {
+        @Override
+        public void mouseClicked(MouseEvent e) {
+            JLabel label = (JLabel) e.getSource();
+            if (label == back) {
+                container.showMenu();
+            }
+        }
+
+        @Override
+        public void mousePressed(MouseEvent e) {
+
+        }
+
+        @Override
+        public void mouseReleased(MouseEvent e) {
+
+        }
+
+        @Override
+        public void mouseEntered(MouseEvent e) {
+            JLabel label = (JLabel) e.getSource();
+            if (label == back) {
+                ImageIcon imgBack2 = new ImageIcon(getClass().getResource("/Images/back2.png"));
+                back.setIcon(imgBack2);
+            }
+        }
+
+        @Override
+        public void mouseExited(MouseEvent e) {
+            JLabel label = (JLabel) e.getSource();
+            if (label == back) {
+                ImageIcon imgBack1 = new ImageIcon(getClass().getResource("/Images/back1.png"));
+                back.setIcon(imgBack1);
+            }
+        }
+    };
 
     private class Hander implements KeyListener {
         @Override
@@ -44,17 +101,13 @@ public class PlayGame extends JPanel implements Runnable {
         }
     }
 
-
     @Override
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
         Graphics2D g2d = (Graphics2D) g;
-        Image infoBg = new ImageIcon(getClass().getResource("/Images/inGameInfo.png")).getImage();
-        g.drawImage(infoBg, 675, 0, 235, 675, null);
         manager.draw(g2d);
 
     }
-
 
     @Override
     public void run() {
@@ -82,25 +135,34 @@ public class PlayGame extends JPanel implements Runnable {
                 manager.player.changeDirection(Direction.UP);
                 manager.movePlayer(count);
             }
-            if (key.get(KeyEvent.VK_SPACE)) {
-                manager.setBoom(System.currentTimeMillis());
-            }
+
             for (int i = 0; i < manager.listBoom.size(); i++) {
-                if (System.currentTimeMillis() - manager.listBoom.get(i).timeStart > manager.listBoom.get(i).timeExplosion)
+                if (System.currentTimeMillis() - manager.listBoom.get(i).timeStart > manager.listBoom.get(i).getTimeExplosion())
                     manager.removeBoom(manager.listBoom.get(i));
             }
 
             for (int i = 0; i < manager.listBoomFire.size(); i++) {
-                if (System.currentTimeMillis() - manager.listBoomFire.get(i).timeStart > manager.listBoomFire.get(i).time)
+                if (System.currentTimeMillis() - manager.listBoomFire.get(i).getTimeStart() > manager.listBoomFire.get(i).getTime())
                     manager.removeBoomFire(manager.listBoomFire.get(i));
             }
-            manager.moveBot(count);
-            manager.playerAlive();
-            manager.bommFireVsBot();
-            manager.boomFireVsPlayer();
+            if(!manager.isLose&&!manager.isWin) {
+                if (manager.player.isAlive) {
+                    if (key.get(KeyEvent.VK_SPACE)) {
+                        manager.setBoom(System.currentTimeMillis());
+                    }
+                    manager.itemVsPlayer();
+                    manager.playerVsBot();
+                    manager.moveBot(count);
+                    manager.bommFireVsBot();
+                    manager.boomFireVsPlayer();
+                    manager.endRound();
+                } else {
+                    if (System.currentTimeMillis() - manager.player.timeDeath > 2000) manager.spawnPlayer();
+                }
+            }
             repaint();
             count++;
-            if (count == 1000000) {
+            if (count == 10000) {
                 count = 0;
             }
 

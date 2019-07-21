@@ -4,13 +4,14 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.Collections;
 
-public class Map {
-    int[][] mapObjs = new int[15][15];
-    ArrayList<Integer> listImgName = new ArrayList<>();
-    Image[] imgList;
+class Map {
+    private static int size = 45;
+    private ArrayList<Integer> listImgName = new ArrayList<>();
+    private Image[] imgList;
     Cell[][] listCell = new Cell[15][15];
 
-    public Map(String map) {
+
+    Map(String map) {
         readMap(map);
         getListImgName();
         getListImg();
@@ -36,8 +37,7 @@ public class Map {
                 if ((line = file.readLine()) == null) break;
                 String str[] = line.split(" ");
                 for (int j = 0; j < 15; j++) {
-                    mapObjs[i][j] = Integer.parseInt(str[j]);
-                    listCell[i][j] = new Cell(j * 45, i * 45, Integer.parseInt(str[j]));
+                    listCell[i][j] = new Cell(j * size, i * size, Integer.parseInt(str[j]));
                 }
             }
         } catch (IOException e) {
@@ -48,8 +48,8 @@ public class Map {
     private void getListImgName() {
         for (int i = 0; i < 15; i++) {
             for (int j = 0; j < 15; j++) {
-                if (!listImgName.contains(mapObjs[i][j])) {
-                    listImgName.add(mapObjs[i][j]);
+                if (!listImgName.contains(listCell[i][j].value)) {
+                    listImgName.add(listCell[i][j].value);
                 }
             }
         }
@@ -63,14 +63,14 @@ public class Map {
         }
     }
 
-
-    public void drawMap(Graphics2D g2d) {
+    void drawMap(Graphics2D g2d) {
         Image imgBackGround = new ImageIcon(getClass().getResource("/Images/map1BG.png")).getImage();
-        g2d.drawImage(imgBackGround, 45, 45, 585, 585, null);
+        g2d.drawImage(imgBackGround, size, size, 585, 585, null);
         for (int i = 0; i < 15; i++) {
             for (int j = 0; j < 15; j++) {
-                if (mapObjs[i][j] != 0)
-                    g2d.drawImage(imgList[mapObjs[i][j]], j * 45, i * 45, 45, 45, null);
+                if (listCell[i][j].value != 0)
+                    g2d.drawImage(imgList[listCell[i][j].value], j * size, i * size, size, size, null);
+
             }
         }
     }

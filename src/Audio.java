@@ -3,21 +3,28 @@ import java.applet.Applet;
 import java.applet.AudioClip;
 import java.util.HashMap;
 
-public class Audio {
+class Audio {
     private HashMap<String, AudioClip> audioMap;
 
-    public Audio() {
+    Audio() {
         audioMap = new HashMap<>();
         addAudio("/Sounds/menu.wav");
         addAudio("/Sounds/click.wav");
+        addAudio("/Sounds/bombEx.wav");
+        addAudio("/Sounds/newBomb.wav");
+        addAudio("/Sounds/bot_die.wav");
+        addAudio("/Sounds/item.wav");
+        addAudio("/Sounds/lose.mid");
+        addAudio("/Sounds/win.wav");
+        addAudio("/Sounds/player_die.wav");
     }
 
-    public void addAudio(String name) {
+    private void addAudio(String name) {
         AudioClip auClip = Applet.newAudioClip(Audio.class.getResource(name));
         audioMap.put(name, auClip);
     }
 
-    public AudioClip getAudio(String name) {
+    AudioClip getAudio(String name) {
         return audioMap.get(name);
     }
 }

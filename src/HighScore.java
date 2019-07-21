@@ -10,13 +10,13 @@ import java.io.*;
 import java.util.ArrayList;
 
 public class HighScore extends JPanel {
-    Container container;
-    ArrayList<Pair<String, String>> listHighScore;
-    JLabel back;
-    FontAB font = new FontAB(90);
-    FontAB font2 = new FontAB(50);
+    private Container container;
+    private ArrayList<Pair<String, String>> listHighScore;
+    private JLabel back;
+    private FontAB font = new FontAB(90);
+    private FontAB font2 = new FontAB(50);
 
-    public HighScore(Container container) {
+    HighScore(Container container) {
         this.container = container;
         this.init();
         this.initComp();
@@ -92,18 +92,13 @@ public class HighScore extends JPanel {
     @Override
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
-        BufferedImage imgBackGround = null;
-        try {
-            imgBackGround = ImageIO.read(getClass().getResourceAsStream("/Images/BGHighScore.png"));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        Image imgBackGround  =new ImageIcon(getClass().getResource("/Images/BGHighScore.png")).getImage();
         g.drawImage(imgBackGround, 0, 0, 905, 675, null);
         g.setColor(Color.GREEN);
         g.setFont(font.fontAB);
         g.drawString("HIGH SCORE", 260, 80);
         g.setFont(font2.fontAB);
-        int pad = 100;
+        int pad = 115;
         for (int i = 0; i < listHighScore.size(); i++) {
             g.drawString(listHighScore.get(i).getKey(), 240, 175 + pad * i);
             g.drawString(listHighScore.get(i).getValue(), 600, 175 + pad * i);

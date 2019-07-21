@@ -1,5 +1,3 @@
-import javafx.util.Pair;
-
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
@@ -9,13 +7,13 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 
 public class Menu extends JPanel {
-    JLabel lPlay = new JLabel();
-    JLabel lOptions = new JLabel();
-    JLabel lHighScore = new JLabel();
-    JLabel lExit = new JLabel();
-    Container container;
+    private JLabel lPlay = new JLabel();
+    private JLabel lOptions = new JLabel();
+    private JLabel lHighScore = new JLabel();
+    private JLabel lExit = new JLabel();
+    private Container container;
 
-    public Menu(Container container) {
+    Menu(Container container) {
         this.container = container;
         this.init();
         this.initComp();
@@ -133,12 +131,7 @@ public class Menu extends JPanel {
     @Override
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
-        BufferedImage imgBackGround = null;
-        try {
-            imgBackGround = ImageIO.read(getClass().getResourceAsStream("/Images/menu.png"));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        Image imgBackGround=new ImageIcon(getClass().getResource("/Images/menu.png")).getImage();
         g.drawImage(imgBackGround, 0, 0, 905, 675, null);
     }
 

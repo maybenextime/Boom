@@ -1,208 +1,63 @@
-import javax.swing.*;
 import java.awt.*;
 
 
-public class Bot {
-    public Direction direction = Direction.DOWN;
-    public int speed = 1;
-    public int x = 45;
-    public int y = 45;
-    public boolean isMoving = false;
-    public Direction direct=Direction.RIGHT;
+public abstract class Bot {
+    private static int size = 45;
+    Direction direction;
+    public int x;
+    public int y;
+    private int imgIndex = 0;
 
 
-
-
-    public int imgIndex = 0;
-
-
-    public Bot(int x, int y, Direction direct) {
+    Bot(int x, int y, Direction direct) {
         this.x = x;
         this.y = y;
-        this.direct = direct;
+        this.direction = direct;
     }
 
-    Image[] botDown = {
-            new ImageIcon(getClass().getResource("/Images/monster_down1.png")).getImage(),
-            new ImageIcon(getClass().getResource("/Images/monster_down2.png")).getImage(),
-            new ImageIcon(getClass().getResource("/Images/monster_down3.png")).getImage(),
-            new ImageIcon(getClass().getResource("/Images/monster_down4.png")).getImage(),
-            new ImageIcon(getClass().getResource("/Images/monster_down5.png")).getImage(),
-            new ImageIcon(getClass().getResource("/Images/monster_down6.png")).getImage()
+    private Image[] botDown;
+    private Image[] botLeft;
+    private Image[] botUp;
+    private Image[] botRight;
 
-    };
-
-    Image[] botLeft = {
-            new ImageIcon(getClass().getResource("/Images/monster_left1.png")).getImage(),
-            new ImageIcon(getClass().getResource("/Images/monster_left2.png")).getImage(),
-            new ImageIcon(getClass().getResource("/Images/monster_left3.png")).getImage(),
-            new ImageIcon(getClass().getResource("/Images/monster_left4.png")).getImage(),
-            new ImageIcon(getClass().getResource("/Images/monster_left5.png")).getImage(),
-            new ImageIcon(getClass().getResource("/Images/monster_left6.png")).getImage()
-
-    };
-    Image[] botUp = {
-            new ImageIcon(getClass().getResource("/Images/monster_up1.png")).getImage(),
-            new ImageIcon(getClass().getResource("/Images/monster_up2.png")).getImage(),
-            new ImageIcon(getClass().getResource("/Images/monster_up3.png")).getImage(),
-            new ImageIcon(getClass().getResource("/Images/monster_up4.png")).getImage(),
-            new ImageIcon(getClass().getResource("/Images/monster_up5.png")).getImage(),
-            new ImageIcon(getClass().getResource("/Images/monster_up6.png")).getImage()
-
-    };
-
-    Image[] botRight = {
-            new ImageIcon(getClass().getResource("/Images/monster_right1.png")).getImage(),
-            new ImageIcon(getClass().getResource("/Images/monster_right2.png")).getImage(),
-            new ImageIcon(getClass().getResource("/Images/monster_right3.png")).getImage(),
-            new ImageIcon(getClass().getResource("/Images/monster_right4.png")).getImage(),
-            new ImageIcon(getClass().getResource("/Images/monster_right5.png")).getImage(),
-            new ImageIcon(getClass().getResource("/Images/monster_right6.png")).getImage()
-
-    };
-
-    public void changeDirection(Direction d) {
-        this.direction = d;
+    private void setImgUp(Image[] botUp) {
+        this.botUp = botUp;
     }
 
-    public void botMove(int c, int[][] mapBox, int[][]mapBoom) {
-        if (c % 20 != 0) {
-            return;
-        }
-        int xRaw = x;
-        int yRaw = y;
-        switch (direction) {
+    private void setImgDown(Image[] botDown) {
+        this.botDown = botDown;
+    }
 
-            case DOWN: {
-                yRaw += speed;
+    private void setImgLeft(Image[] botLeft) {
+        this.botLeft = botLeft;
+    }
 
-                int d = checkImpactWithObjs(xRaw, yRaw, mapBox);
-                if (d != 0) {
-                    if (0 < d && d <= 25) {
-                        x++;
-                        return;
-                    }
-                    if (-25 <= d && d < 0) {
-                        x--;
-                        return;
-                    } else{
-                        changeDirection(Direction.randomDirect());
-                        return;
-                    }
-                }
-                    int k = checkImpactWithObjs(xRaw, yRaw, mapBoom);
-                    if (k != 0) {
-                            changeDirection(Direction.randomDirect());
-                            return;
-                        }
+    private void setImgRight(Image[] botRight) {
+        this.botRight = botRight;
+    }
 
-
-                break;
-
-            }
-            case UP: {
-                yRaw -= speed;
-                int d = checkImpactWithObjs(xRaw, yRaw, mapBox);
-                if (d != 0) {
-                    if (0 < d && d <= 25) {
-                        x++;
-                        return;
-                    }
-                    if (-25 <= d && d < 0) {
-                        x--;
-                        return;
-                    } else
-                    {
-                        changeDirection(Direction.randomDirect());
-                        return;
-                    }
-                }
-                    int k = checkImpactWithObjs(xRaw, yRaw, mapBoom);
-                    if (k != 0){
-                            changeDirection(Direction.randomDirect());
-                            return;
-
-                    }
-                break;
-            }
-            case RIGHT: {
-                xRaw += speed;
-
-                int d = checkImpactWithObjs(xRaw, yRaw, mapBox);
-
-                if (d != 0) {
-                    if (0 < d && d <= 25) {
-                        y++;
-                        return;
-                    }
-                    if (-25 <= d && d < 0) {
-                        y--;
-                        return;
-                    } else {
-                        changeDirection(Direction.randomDirect());
-                        return;
-                    }
-                }
-                    int k = checkImpactWithObjs(xRaw, yRaw, mapBoom);
-                    if (k != 0) {
-
-                            changeDirection(Direction.randomDirect());
-                            return;
-
-
-                }
-                break;
-            }
-            case LEFT: {
-                xRaw -= speed;
-                int d = checkImpactWithObjs(xRaw, yRaw, mapBox);
-                if (d != 0) {
-                    if (0 < d && d <= 25) {
-                        y++;
-                        return;
-                    }
-                    if (-25 <= d && d < 0) {
-                        y--;
-                        return;
-                    } else {
-                        changeDirection(Direction.randomDirect());
-                        return;
-                    }
-                }
-                    int k = checkImpactWithObjs(xRaw, yRaw, mapBoom);
-                    if (k != 0) {
-
-                            changeDirection(Direction.randomDirect());
-                            return;
-
-                    }
-                break;
-            }
-        }
-
-        x = xRaw;
-        y = yRaw;
+    void setImg(Image[] botUp, Image[] botDown, Image[] botLeft, Image[] botRight) {
+        setImgUp(botUp);
+        setImgDown(botDown);
+        setImgLeft(botLeft);
+        setImgRight(botRight);
 
     }
 
-
-
-
-
-    public int checkImpactWithObjs(int x, int y, int[][] map) {
+    int checkImpactWithObjs(int x, int y, Cell[][] listCell) {
         switch (direction) {
             case RIGHT: {
-                int i = x / 45 + 1;
-                int j = y / 45;
-                Rectangle boxUp = new Rectangle(i * 45, j * 45, 45, 45);
-                Rectangle boxDown = new Rectangle(i * 45, (j + 1) * 45, 45, 45);
+                int i = x / size + 1;
+                int j = y / size;
+                Rectangle boxUp = new Rectangle(i * size, j * size, size, size);
+                Rectangle boxDown = new Rectangle(i * size, (j + 1) * size, size, size);
                 Rectangle inters = new Rectangle();
-                if (map[j][i] != 0 && map[j + 1][i] != 0) return 30;
-                if (map[j][i] != 0) {
+                if (listCell[j][i].value != 0 && listCell[j + 1][i].value != 0) return 30;
+                if (listCell[j][i].value != 0) {
                     inters = getRect().intersection(boxUp);
                     return (int) inters.getHeight();
 
-                } else if (map[j + 1][i] != 0) {
+                } else if (listCell[j + 1][i].value != 0) {
                     inters = getRect().intersection(boxDown);
                     return (int) -inters.getHeight();
 
@@ -210,52 +65,129 @@ public class Bot {
                 break;
             }
             case LEFT: {
-                int i = x / 45;
-                int j = y / 45;
-                Rectangle boxUp = new Rectangle(i * 45, j * 45, 45, 45);
-                Rectangle boxDown = new Rectangle(i * 45, (j + 1) * 45, 45, 45);
+                int i = x / size;
+                int j = y / size;
+                Rectangle boxUp = new Rectangle(i * size, j * size, size, size);
+                Rectangle boxDown = new Rectangle(i * size, (j + 1) * size, size, size);
                 Rectangle inters = new Rectangle();
-                if (map[j][i] != 0 && map[j + 1][i] != 0) return 30;
-                if (map[j][i] != 0) {
+                if (listCell[j][i].value != 0 && listCell[j + 1][i].value != 0) return 30;
+                if (listCell[j][i].value != 0) {
                     inters = getRect().intersection(boxUp);
                     return (int) inters.getHeight();
-                } else if (map[j + 1][i] != 0) {
+                } else if (listCell[j + 1][i].value != 0) {
                     inters = getRect().intersection(boxDown);
                     return (int) -inters.getHeight();
                 }
                 break;
             }
             case DOWN: {
-                int i = x / 45;
-                int j = y / 45 + 1;
-                Rectangle boxLeft = new Rectangle(i * 45, j * 45, 45, 45);
-                Rectangle boxRight = new Rectangle((i + 1) * 45, j * 45, 45, 45);
+                int i = x / size;
+                int j = y / size + 1;
+                Rectangle boxLeft = new Rectangle(i * size, j * size, size, size);
+                Rectangle boxRight = new Rectangle((i + 1) * size, j * size, size, size);
                 Rectangle inters = new Rectangle();
-                if (map[j][i] != 0 && map[j][i + 1] != 0) return 30;
-                if (map[j][i] != 0) {
+                if (listCell[j][i].value != 0 && listCell[j][i + 1].value != 0) return 30;
+                if (listCell[j][i].value != 0) {
                     inters = getRect().intersection(boxLeft);
                     return (int) inters.getWidth();
 
-                } else if ((map[j][i + 1] != 0)) {
+                } else if ((listCell[j][i + 1].value != 0)) {
                     inters = getRect().intersection(boxRight);
                     return (int) -inters.getWidth();
                 }
                 break;
             }
             case UP: {
-                int i = x / 45;
-                int j = y / 45;
-                Rectangle boxLeft = new Rectangle(i * 45, j * 45, 45, 45);
-                Rectangle boxRight = new Rectangle((i + 1) * 45, j * 45, 45, 45);
+                int i = x / size;
+                int j = y / size;
+                Rectangle boxLeft = new Rectangle(i * size, j * size, size, size);
+                Rectangle boxRight = new Rectangle((i + 1) * size, j * size, size, size);
                 Rectangle inters = new Rectangle();
-                if (map[j][i] != 0) inters = getRect().intersection(boxLeft);
-                else if ((map[j][i + 1] != 0)) inters = getRect().intersection(boxRight);
-                if (map[j][i] != 0 && map[j][i + 1] != 0) return 30;
-                if (map[j][i] != 0) {
+                if (listCell[j][i].value != 0) inters = getRect().intersection(boxLeft);
+                else if ((listCell[j][i + 1].value != 0)) inters = getRect().intersection(boxRight);
+                if (listCell[j][i].value != 0 && listCell[j][i + 1].value != 0) return 30;
+                if (listCell[j][i].value != 0) {
                     inters = getRect().intersection(boxLeft);
                     return (int) inters.getWidth();
 
-                } else if ((map[j][i + 1] != 0)) {
+                } else if ((listCell[j][i + 1].value != 0)) {
+                    inters = getRect().intersection(boxRight);
+                    return (int) -inters.getWidth();
+                }
+                break;
+            }
+
+        }
+        return 0;
+    }
+
+    int checkImpactWithObjs(int x, int y, int[][] mapBoom) {
+        switch (direction) {
+            case RIGHT: {
+                int i = x / size + 1;
+                int j = y / size;
+                Rectangle boxUp = new Rectangle(i * size, j * size, size, size);
+                Rectangle boxDown = new Rectangle(i * size, (j + 1) * size, size, size);
+                Rectangle inters = new Rectangle();
+                if (mapBoom[j][i] != 0 && mapBoom[j + 1][i] != 0) return 30;
+                if (mapBoom[j][i] != 0) {
+                    inters = getRect().intersection(boxUp);
+                    return (int) inters.getHeight();
+
+                } else if (mapBoom[j + 1][i] != 0) {
+                    inters = getRect().intersection(boxDown);
+                    return (int) -inters.getHeight();
+
+                }
+                break;
+            }
+            case LEFT: {
+                int i = x / size;
+                int j = y / size;
+                Rectangle boxUp = new Rectangle(i * size, j * size, size, size);
+                Rectangle boxDown = new Rectangle(i * size, (j + 1) * size, size, size);
+                Rectangle inters = new Rectangle();
+                if (mapBoom[j][i] != 0 && mapBoom[j + 1][i] != 0) return 30;
+                if (mapBoom[j][i] != 0) {
+                    inters = getRect().intersection(boxUp);
+                    return (int) inters.getHeight();
+                } else if (mapBoom[j + 1][i] != 0) {
+                    inters = getRect().intersection(boxDown);
+                    return (int) -inters.getHeight();
+                }
+                break;
+            }
+            case DOWN: {
+                int i = x / size;
+                int j = y / size + 1;
+                Rectangle boxLeft = new Rectangle(i * size, j * size, size, size);
+                Rectangle boxRight = new Rectangle((i + 1) * size, j * size, size, size);
+                Rectangle inters = new Rectangle();
+                if (mapBoom[j][i] != 0 && mapBoom[j][i + 1] != 0) return 30;
+                if (mapBoom[j][i] != 0) {
+                    inters = getRect().intersection(boxLeft);
+                    return (int) inters.getWidth();
+
+                } else if ((mapBoom[j][i + 1] != 0)) {
+                    inters = getRect().intersection(boxRight);
+                    return (int) -inters.getWidth();
+                }
+                break;
+            }
+            case UP: {
+                int i = x / size;
+                int j = y / size;
+                Rectangle boxLeft = new Rectangle(i * size, j * size, size, size);
+                Rectangle boxRight = new Rectangle((i + 1) * size, j * size, size, size);
+                Rectangle inters = new Rectangle();
+                if (mapBoom[j][i] != 0) inters = getRect().intersection(boxLeft);
+                else if ((mapBoom[j][i + 1] != 0)) inters = getRect().intersection(boxRight);
+                if (mapBoom[j][i] != 0 && mapBoom[j][i + 1] != 0) return 30;
+                if (mapBoom[j][i] != 0) {
+                    inters = getRect().intersection(boxLeft);
+                    return (int) inters.getWidth();
+
+                } else if ((mapBoom[j][i + 1] != 0)) {
                     inters = getRect().intersection(boxRight);
                     return (int) -inters.getWidth();
                 }
@@ -267,38 +199,52 @@ public class Bot {
     }
 
 
+    void changeDirection(Direction d) {
+        this.direction = d;
+    }
 
+    public void setDirection(Player player, Cell[][] listCell) {}
 
-    public void draw(Graphics2D g2d) {
+    public void botMove(int c, Cell[][] listCell, int[][] mapBoom) {}
+
+    void draw(Graphics2D g2d) {
         switch (direction) {
             case LEFT: {
-                g2d.drawImage(botLeft[imgIndex / 50 % botLeft.length], x, y, 45, 45, null);
+                g2d.drawImage(botLeft[imgIndex / 50 % botLeft.length], x, y, size, size, null);
                 break;
             }
             case RIGHT: {
-                g2d.drawImage(botRight[imgIndex / 50 % botRight.length], x, y, 45, 45, null);
+                g2d.drawImage(botRight[imgIndex / 50 % botRight.length], x, y, size, size, null);
                 break;
             }
             case UP: {
-                g2d.drawImage(botUp[imgIndex / 50 % botUp.length], x, y, 45, 45, null);
+                g2d.drawImage(botUp[imgIndex / 50 % botUp.length], x, y, size, size, null);
                 break;
             }
-
             case DOWN: {
-                g2d.drawImage(botDown[imgIndex / 50 % botDown.length], x, y, 45, 45, null);
+                g2d.drawImage(botDown[imgIndex / 50 % botDown.length], x, y, size, size, null);
                 break;
             }
         }
         imgIndex++;
-        if (imgIndex>100000) imgIndex=0;
-        isMoving = false;
+        if (imgIndex > 1000) imgIndex = 0;
     }
 
-    public Rectangle getRect(){
-        return new Rectangle(x,y,45,45);
+    Rectangle getRect() {
+        return new Rectangle(x, y, size, size);
+    }
+
+    void setCoord(int x, int y) {
+        setX(x);
+        setY(y);
+    }
+
+    public void setX(int x) {
+        this.x = x;
+    }
+
+    public void setY(int y) {
+        this.y = y;
     }
 
 }
-
-
-

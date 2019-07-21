@@ -3,43 +3,45 @@ import java.awt.*;
 import java.util.ArrayList;
 
 public class BoomFire {
+    private static int size = 45;
+    private static int time = 300;
 
-    int time = 500;
-    public int lenght = 1;
-    public long timeStart;
+    private long timeStart;
+    private int lenght;
     public int x;
     public int y;
-    public ArrayList<Rectangle> listRemove = new ArrayList<>();
-    public ArrayList<Rectangle> listRec = new ArrayList<>();
-    public ArrayList<Rectangle> listUpRec = new ArrayList<>();
-    public ArrayList<Rectangle> listDownRec = new ArrayList<>();
-    public ArrayList<Rectangle> listRightRec = new ArrayList<>();
-    public ArrayList<Rectangle> listLeftRec = new ArrayList<>();
 
-    Image[] imgRight = {
+    ArrayList<Cell> listRemove = new ArrayList<>();
+    private ArrayList<Rectangle> listRec = new ArrayList<>();
+    private ArrayList<Rectangle> listUpRec = new ArrayList<>();
+    private ArrayList<Rectangle> listDownRec = new ArrayList<>();
+    private ArrayList<Rectangle> listRightRec = new ArrayList<>();
+    private ArrayList<Rectangle> listLeftRec = new ArrayList<>();
+
+    private Image[] imgRight = {
             new ImageIcon(getClass().getResource("/Images/bombbang_right_1.png")).getImage(),
             new ImageIcon(getClass().getResource("/Images/bombbang_right_2.png")).getImage(),
 
     };
-    Image[] imgLeft = {
+    private Image[] imgLeft = {
             new ImageIcon(getClass().getResource("/Images/bombbang_left_1.png")).getImage(),
             new ImageIcon(getClass().getResource("/Images/bombbang_left_2.png")).getImage(),
 
     };
-    Image[] imgDown = {
+    private Image[] imgDown = {
             new ImageIcon(getClass().getResource("/Images/bombbang_down_1.png")).getImage(),
             new ImageIcon(getClass().getResource("/Images/bombbang_down_2.png")).getImage(),
 
     };
-    Image[] imgUp = {
+    private Image[] imgUp = {
             new ImageIcon(getClass().getResource("/Images/bombbang_up_1.png")).getImage(),
             new ImageIcon(getClass().getResource("/Images/bombbang_up_2.png")).getImage(),
 
     };
-    Image imgMID = new ImageIcon(getClass().getResource("/Images/bombbang_mid_2.png")).getImage();
+    private Image imgMID = new ImageIcon(getClass().getResource("/Images/bombbang_mid_2.png")).getImage();
 
 
-    public BoomFire(int x, int y, int lenght, long timeStart) {
+    BoomFire(int x, int y, int lenght, long timeStart) {
         this.x = x;
         this.y = y;
         this.timeStart = timeStart;
@@ -48,165 +50,159 @@ public class BoomFire {
         setListRect();
     }
 
-    public void setListUpRec() {
+    private void setListUpRec() {
         for (int i = 1; i <= lenght; i++)
-            listUpRec.add(new Rectangle(x, y - 45 * i, 45, 45));
+            listUpRec.add(new Rectangle(x, y - size * i, size, size));
     }
 
-    public void setListDownRec() {
+    private void setListDownRec() {
         for (int i = 1; i <= lenght; i++)
-            listDownRec.add(new Rectangle(x, y + 45 * i, 45, 45));
+            listDownRec.add(new Rectangle(x, y + size * i, size, size));
 
     }
 
-    public void setListRightRec() {
+    private void setListRightRec() {
         for (int i = 1; i <= lenght; i++)
-            listRightRec.add(new Rectangle(x + 45 * i, y, 45, 45));
+            listRightRec.add(new Rectangle(x + size * i, y, size, size));
     }
 
-    public void setListLeftRec() {
+    private void setListLeftRec() {
         for (int i = 1; i <= lenght; i++)
-            listLeftRec.add(new Rectangle(x - 45 * i, y, 45, 45));
+            listLeftRec.add(new Rectangle(x - size * i, y, size, size));
     }
 
-    public void setAllDirectList() {
+    private void setAllDirectList() {
         setListUpRec();
         setListDownRec();
         setListRightRec();
         setListLeftRec();
     }
 
-    public void setListRect() {
+    private void setListRect() {
         listRec.clear();
+        listRec.add(new Rectangle(x, y, size, size));
         listRec.addAll(listDownRec);
         listRec.addAll(listUpRec);
         listRec.addAll(listRightRec);
         listRec.addAll(listLeftRec);
     }
 
-
-    public void draw(Graphics2D g2d) {
-        g2d.drawImage(imgMID, x, y, 45, 45, null);
-
-        for (int i = 0; i < listUpRec.size(); i++) {
-            g2d.drawImage(imgUp[0], listUpRec.get(i).x, listUpRec.get(i).y, 45, 45, null);
-        }
-        if (listUpRec.size() == lenght) {
-            g2d.drawImage(imgUp[1], x, y - lenght * 45, 45, 45, null);
-        }
-
-
-        for (int i = 0; i < listDownRec.size(); i++) {
-            g2d.drawImage(imgDown[0], listDownRec.get(i).x, listDownRec.get(i).y, 45, 45, null);
-        }
-
-        if (listDownRec.size() == lenght) {
-            g2d.drawImage(imgDown[1], x, y + lenght * 45, 45, 45, null);
-        }
-
-        for (int i = 0; i < listLeftRec.size(); i++) {
-            g2d.drawImage(imgLeft[0], listLeftRec.get(i).x, listLeftRec.get(i).y, 45, 45, null);
-        }
-
-        if (listLeftRec.size() == lenght) {
-            g2d.drawImage(imgLeft[1], x - lenght * 45, y, 45, 45, null);
-        }
-
-        for (int i = 0; i < listRightRec.size(); i++) {
-            g2d.drawImage(imgRight[0], listRightRec.get(i).x, listRightRec.get(i).y, 45, 45, null);
-        }
-        if (listRightRec.size() == lenght) {
-            g2d.drawImage(imgRight[1], x + lenght * 45, y, 45, 45, null);
-        }
-
-    }
-
-    public void impactBoomFireVsBoom(ArrayList<Boom> listBoom) {
-
-        for (int i = 0; i < listBoom.size(); i++) {
-            Rectangle boom = new Rectangle(listBoom.get(i).x, listBoom.get(i).y, 45, 45);
-
-            for (int j = 0; j < listRec.size(); j++) {
-                Rectangle inter = listRec.get(j).intersection(boom);
-                if (inter.getHeight() > 0 && inter.getWidth() > 0) listBoom.get(i).setTimeExplosion(0);
+    void impactBoomFireVsBoom(ArrayList<Boom> listBoom) {
+        for (Boom aListBoom : listBoom) {
+            Rectangle boom = new Rectangle(aListBoom.x, aListBoom.y, size, size);
+            for (Rectangle aListRec : listRec) {
+                if (aListRec.intersects(boom)) aListBoom.setTimeExplosion(0);
             }
         }
     }
 
-    public void DirectImpactBoomVsBBox(ArrayList<Rectangle> listBBox, ArrayList<Rectangle> directR) {
-        for (int i = 0; i < directR.size(); i++) {
-            for (int j = 0; j < listBBox.size(); j++) {
-               //
-                Rectangle inter = directR.get(i).intersection(listBBox.get(j));
-                if (inter.getWidth() == 45 && inter.getHeight() == 45) {
-                    for (int k = i+1 ; k < lenght; k++) {
-                        if(i+1==directR.size()) return;
-                        directR.remove(i + 1);
-
+    private void impactDirectBoomFirevsBox(Cell[][] listCell, ArrayList<Rectangle> directRect) {
+        for (int i = 0; i < directRect.size(); i++) {
+            int row = directRect.get(i).y / size;
+            int col = directRect.get(i).x / size;
+            if (listCell[row][col].value != 0) {
+                if (listCell[row][col].value < 15) {
+                    for (int k = i + 1; k < lenght; k++) {
+                        if (i + 1 == directRect.size()) return;
+                        directRect.remove(i + 1);
                     }
                     setListRect();
-                    listRemove.add(listBBox.get(j));
-
-                }
-            }
-        }
-
-    }
-
-    public void DirectImpactBoomVsUBox(ArrayList<Rectangle> listUBox, ArrayList<Rectangle> directR) {
-        for (int i = 0; i < directR.size(); i++) {
-            for (int j = 0; j < listUBox.size(); j++) {
-                if(i==directR.size()) return;
-                Rectangle inter = directR.get(i).intersection(listUBox.get(j));
-                if (inter.getWidth() == 45 && inter.getHeight() == 45) {
+                    listRemove.add(listCell[row][col]);
+                } else if (listCell[row][col].value > 15) {
                     for (int k = i; k < lenght; k++) {
-                        directR.remove(i);
+                        directRect.remove(i);
                     }
                     setListRect();
-
                 }
+                break;
             }
         }
     }
 
-    public void impactBoomFireVsBBox(ArrayList<Rectangle> listBBox) {
-        DirectImpactBoomVsBBox(listBBox, listUpRec);
-        DirectImpactBoomVsBBox(listBBox, listDownRec);
-        DirectImpactBoomVsBBox(listBBox, listLeftRec);
-        DirectImpactBoomVsBBox(listBBox, listRightRec);
+    void impactBoomFirevsBox(Cell[][] listCell) {
+        impactDirectBoomFirevsBox(listCell, listUpRec);
+        impactDirectBoomFirevsBox(listCell, listDownRec);
+        impactDirectBoomFirevsBox(listCell, listLeftRec);
+        impactDirectBoomFirevsBox(listCell, listRightRec);
+
     }
 
-
-    public void impactBoomFireVsUBox(ArrayList<Rectangle> listBBox) {
-        DirectImpactBoomVsUBox(listBBox, listUpRec);
-        DirectImpactBoomVsUBox(listBBox, listDownRec);
-        DirectImpactBoomVsUBox(listBBox, listLeftRec);
-        DirectImpactBoomVsUBox(listBBox, listRightRec);
-    }
-
-    public Boolean checkVsPlayer(Player player) {
-        for (int i = 0; i < listRec.size(); i++) {
-            Rectangle inter = player.getRect().intersection(listRec.get(i));
+    Boolean checkVsPlayer(Player player) {
+        for (Rectangle aListRec : listRec) {
+            Rectangle inter = player.getRect().intersection(aListRec);
             int min;
-            if (inter.width < inter.height) min = inter.width;
-            else min = inter.height;
+            min = Math.min(inter.width, inter.height);
             if (min > 20) return true;
         }
         return false;
     }
 
-
-
-    public void checkVsBot(ArrayList<Bot2> listbot) {
+    void impactVsBot(ArrayList<Bot> listbot) {
         for (int i = 0; i < listbot.size(); i++) {
-            for (int j = 0; j < listRec.size(); j++) {
-                if (listbot.get(i).getRect().intersects(listRec.get(j))) {
+            for (Rectangle aListRec : listRec) {
+                if (listbot.get(i).getRect().intersects(aListRec)) {
                     listbot.remove(i);
                     break;
                 }
             }
         }
     }
+
+    void impactVsItems(ArrayList<Item> listItem) {
+        for (int i = 0; i < listItem.size(); i++) {
+            for (Rectangle aListRec : listRec) {
+                if (listItem.get(i).getRect().intersects(aListRec)) {
+                    listItem.remove(i);
+                    break;
+                }
+            }
+        }
+    }
+
+    void draw(Graphics2D g2d) {
+        g2d.drawImage(imgMID, x, y, size, size, null);
+
+        for (int i=0;i<listUpRec.size();i++) {
+            g2d.drawImage(imgUp[0], listUpRec.get(i).x, listUpRec.get(i).y, size, size, null);
+        }
+        if (listUpRec.size() == lenght) {
+            g2d.drawImage(imgUp[1], x, y - lenght * size, size, size, null);
+        }
+
+
+        for (int i=0;i<listDownRec.size();i++) {
+            g2d.drawImage(imgDown[0], listDownRec.get(i).x, listDownRec.get(i).y, size, size, null);
+        }
+
+        if (listDownRec.size() == lenght) {
+            g2d.drawImage(imgDown[1], x, y + lenght * size, size, size, null);
+        }
+
+        for (int i=0;i<listLeftRec.size();i++) {
+            g2d.drawImage(imgLeft[0], listLeftRec.get(i).x, listLeftRec.get(i).y, size, size, null);
+        }
+
+        if (listLeftRec.size() == lenght) {
+            g2d.drawImage(imgLeft[1], x - lenght * size, y, size, size, null);
+        }
+
+        for (int i=0;i<listRightRec.size();i++) {
+            g2d.drawImage(imgRight[0], listRightRec.get(i).x, listRightRec.get(i).y, size, size, null);
+        }
+        if (listRightRec.size() == lenght) {
+            g2d.drawImage(imgRight[1], x + lenght * size, y, size, size, null);
+        }
+    }
+
+    public long getTimeStart() {
+        return timeStart;
+    }
+
+    public int getTime() {
+        return time;
+    }
+
+
 }
 
 
