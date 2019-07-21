@@ -9,7 +9,7 @@ public class Bot1 extends Bot {
     public int y ;
 
     Bot1(int x, int y, Direction direct) {
-        super(x, y, direct);
+        super(x, y,1, direct);
         this.x=x;
         this.y=y;
         this.direction=direct;

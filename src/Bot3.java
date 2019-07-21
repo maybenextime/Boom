@@ -19,7 +19,8 @@ public class Bot3 extends Bot {
 
 
     Bot3(int x, int y, Direction direct) {
-        super(x, y, direct);
+        super(x, y, 3, direct);
+        isBot3=true;
         this.x = x;
         this.y = y;
         this.direction = direct;
@@ -149,7 +150,7 @@ public class Bot3 extends Bot {
     @Override
     public void botMove(int c, Cell[][] mapBox, int[][] mapBoom) {
         if (isMove) {
-            if (c % 10 != 0) {
+            if (c % 5 != 0) {
                 return;
             }
             int xRaw = x;
@@ -309,6 +310,7 @@ public class Bot3 extends Bot {
 
         }
     }
+
 
 }
 

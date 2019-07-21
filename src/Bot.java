@@ -4,15 +4,20 @@ import java.awt.*;
 public abstract class Bot {
     private static int size = 45;
     Direction direction;
+    public int heart;
     public int x;
     public int y;
+    public boolean isBot3=false;
+    public boolean isUndeath=false;
+    public long timeCount;
     private int imgIndex = 0;
 
 
-    Bot(int x, int y, Direction direct) {
+    Bot(int x, int y, int heart, Direction direct) {
         this.x = x;
         this.y = y;
         this.direction = direct;
+        this.heart=heart;
     }
 
     private Image[] botDown;

@@ -139,12 +139,20 @@ public class BoomFire {
 
     void impactVsBot(ArrayList<Bot> listbot) {
         for (int i = 0; i < listbot.size(); i++) {
-            for (Rectangle aListRec : listRec) {
-                if (listbot.get(i).getRect().intersects(aListRec)) {
-                    listbot.remove(i);
-                    break;
+            if ((!listbot.get(i).isUndeath) || (((listbot.get(i).isUndeath)) && (System.currentTimeMillis() - listbot.get(i).timeCount > 500))) {
+                for (Rectangle aListRec : listRec) {
+                    if (listbot.get(i).getRect().intersects(aListRec)) {
+                        listbot.get(i).heart--;
+                        if (listbot.get(i).heart != 0) {
+                            listbot.get(i).isUndeath = true;
+                            listbot.get(i).timeCount = System.currentTimeMillis();
+                        }
+                        if (listbot.get(i).heart == 0) listbot.remove(i);
+                        break;
+                    }
                 }
             }
+
         }
     }
 
@@ -162,7 +170,7 @@ public class BoomFire {
     void draw(Graphics2D g2d) {
         g2d.drawImage(imgMID, x, y, size, size, null);
 
-        for (int i=0;i<listUpRec.size();i++) {
+        for (int i = 0; i < listUpRec.size(); i++) {
             g2d.drawImage(imgUp[0], listUpRec.get(i).x, listUpRec.get(i).y, size, size, null);
         }
         if (listUpRec.size() == lenght) {
@@ -170,7 +178,7 @@ public class BoomFire {
         }
 
 
-        for (int i=0;i<listDownRec.size();i++) {
+        for (int i = 0; i < listDownRec.size(); i++) {
             g2d.drawImage(imgDown[0], listDownRec.get(i).x, listDownRec.get(i).y, size, size, null);
         }
 
@@ -178,7 +186,7 @@ public class BoomFire {
             g2d.drawImage(imgDown[1], x, y + lenght * size, size, size, null);
         }
 
-        for (int i=0;i<listLeftRec.size();i++) {
+        for (int i = 0; i < listLeftRec.size(); i++) {
             g2d.drawImage(imgLeft[0], listLeftRec.get(i).x, listLeftRec.get(i).y, size, size, null);
         }
 
@@ -186,7 +194,7 @@ public class BoomFire {
             g2d.drawImage(imgLeft[1], x - lenght * size, y, size, size, null);
         }
 
-        for (int i=0;i<listRightRec.size();i++) {
+        for (int i = 0; i < listRightRec.size(); i++) {
             g2d.drawImage(imgRight[0], listRightRec.get(i).x, listRightRec.get(i).y, size, size, null);
         }
         if (listRightRec.size() == lenght) {

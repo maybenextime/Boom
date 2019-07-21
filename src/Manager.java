@@ -36,7 +36,7 @@ class Manager {
         creatRound(round);
     }
 
-    private void creatRound(int round) {
+    private void creatRound(int round)  {
         map = new Map("map" + String.valueOf(round));
         player.x = 45;
         player.y = 45;
@@ -222,6 +222,27 @@ class Manager {
         }
         if (player.heart == 1) {
             g2d.drawImage(heart, 750, 120, null);
+        }
+        if (round==3){
+            g2d.setFont(new Font("1", Font.BOLD, 20));
+
+            g2d.drawString("Boss", 755,250);
+            for(int i=0;i<listBot.size();i++){
+                if(listBot.get(i).isBot3) {
+                    if (listBot.get(i).heart == 3) {
+                        g2d.drawImage(heart, 750, 270, null);
+                        g2d.drawImage(heart, 775, 270, null);
+                        g2d.drawImage(heart, 800, 270, null);
+                    }
+                    if (listBot.get(i).heart == 2) {
+                        g2d.drawImage(heart, 750, 270, null);
+                        g2d.drawImage(heart, 775, 270, null);
+                    }
+                    if (listBot.get(i).heart == 1) {
+                        g2d.drawImage(heart, 750, 270, null);
+                    }
+                }
+            }
         }
     }
 
